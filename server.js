@@ -39,6 +39,7 @@ app.post('/send-notification', async (req, res) => {
       title: 'New Message',
       body: message,
       icon: '/icon.png', // Specify your icon path
+      sound: 'default',
     },
   };
 
