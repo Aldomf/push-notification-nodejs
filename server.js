@@ -4,7 +4,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors'); // Import the cors package
 
 // Initialize Firebase Admin SDK with your service account
-const serviceAccount = require('./chat-react-ts-cf958-firebase-adminsdk-d6xum-cde0e520a2.json');
+const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT_KEY);
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
