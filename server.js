@@ -2,7 +2,7 @@ const express = require('express');
 const admin = require('firebase-admin');
 const bodyParser = require('body-parser');
 require('dotenv').config();
-const cors = require('cors'); // Import the cors package
+const cors = require('cors');
 
 // Parse the JSON string from the environment variable
 const serviceAccountKey = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT_KEY);
@@ -17,34 +17,32 @@ admin.initializeApp({
 });
 
 const app = express();
-// Use CORS middleware to enable CORS
 app.use(cors());
 app.use(bodyParser.json());
 
 app.post('/send-notification', async (req, res) => {
   const { token, message } = req.body;
 
-  // Log the received data to check its type
   console.log('Received token:', token);
   console.log('Received message:', message);
   console.log('Type of message:', typeof message);
 
-  // Ensure the message is a string and not undefined
   if (typeof message !== 'string' || !message) {
     return res.status(400).send('Invalid message format');
   }
 
-  const payload = {
+  const messagePayload = {
+    token: token,
     notification: {
       title: 'New Message',
       body: message,
       icon: '/icon.png', // Specify your icon path
-      sound: 'default',
+      sound: 'default', // Ensure sound notification
     },
   };
 
   try {
-    await admin.messaging().sendToDevice(token, payload);
+    await admin.messaging().send(messagePayload);
     res.status(200).send('Notification sent successfully');
   } catch (error) {
     console.error('Error sending notification:', error);
